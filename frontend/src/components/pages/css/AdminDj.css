@@ -1,0 +1,85 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 100px;
+}
+
+.canciones-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.canciones-table th, .canciones-table td {
+    border: 1px solid #818181;
+    padding: 8px;
+    text-align: left;
+}
+
+.canciones-table th {
+    background-color: #b99730;
+}
+
+.table-reproducidas th{
+    background-color: #087411;
+}
+
+.th-botones{
+    display: flex;
+    justify-content: center;
+}
+
+.td-botones{
+    display: flex;
+    justify-content: space-around;
+}
+
+.button-reproducir{
+    background: #087411;
+}
+
+.container_filtrar{
+    display: flex;
+}
+
+.container_filtrar p{
+    margin-right: 10px;
+}
+
+
+@media screen and (max-width: 850px){
+    .canciones-table{
+        font-size: 1vh;
+    }
+    .button-reproducir{
+
+        font-size: 1vh;
+    }
+    .button-borrar{
+
+        font-size: 1vh;
+    }
+
+}
+
+@media screen and (max-width: 700px){
+    .button-reproducir{
+        background: whitesmoke;
+        color: black;
+        margin: 0px;
+        padding: 0px;
+        font-size: 0.9vh;
+    }
+    .button-borrar{
+        background: whitesmoke;
+        color: black;
+        margin: 0px;
+        padding: 0px;
+        font-size: 0.9vh;
+        padding-right: 1vh;
+    }
+}

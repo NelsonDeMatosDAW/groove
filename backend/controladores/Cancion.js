@@ -2,15 +2,20 @@
 const modeloCancion = require("../modelos/Cancion");
 
 const crear = async (req, res) => {
+    console.log("Ejecutando crear cancion");
 
     //Recoger parametros enviados desde el form
     let parametros = req.body;
     let autorForm = req.body?.autor;
     let tituloForm = req.body?.titulo;
-    let estadoForm = "pendiente";
-    //El solicitante tendremos que recogerlo del token
-    let solicitanteForm = "661d4152bcc214de4b2567d8";
-
+    let solicitanteForm = req.body?.solicitante; //Recojemos el solicitante de la req
+    let estadoForm = 'pendiente';
+    if(req.body.estado){
+        estadoForm = req.body?.estado;
+    }else{
+        estadoForm = "pendiente";
+    }
+    
     //Comprobamos que se han enviado todos los datos
     if(!autorForm || !tituloForm || !estadoForm || !solicitanteForm){
         res.status(400).json({
@@ -50,10 +55,13 @@ const crear = async (req, res) => {
 const listar = async (req, res) => {
     /**
     * guardamos en consulta el resultado de la consulta a la BBDD para así
-    * poder utilizar esta consulta con diferentes métodos, como ordenar, filtrar cierto número de artículos etc
+    * poder utilizar esta consulta con diferentes métodos, como ordenar, filtrar cierto número de canciones etc
     */
-    let consulta = modeloCancion.find({});
-        console.log("Se está ejecutando el método listar");
+    let consulta = modeloCancion.find({})
+                                .populate('solicitante', 'nombre email');
+    console.log("Ejecutando listar canciones");
+
+    console.log(consulta)
 
         if(req.params.ultimos){
             consulta.limit(req.params.ultimos);
@@ -67,7 +75,7 @@ const listar = async (req, res) => {
             cancionesBBDD
         })
     }).catch(err => {
-        return res.satus(404).json({
+        return res.status(404).json({
             status: "error",
             mensaje: "No se han encontrado canciones"
         })
@@ -139,7 +147,7 @@ const editar = async (req, res) => {
             });
         }
 
-        // Buscar y actualizar artículo
+        // Buscar y actualizar cancion
         const cancionActualizada = await modeloCancion.findOneAndUpdate({_id: cancionId}, parametros, { new: true });
 
         if (!cancionActualizada) {
@@ -165,11 +173,56 @@ const editar = async (req, res) => {
     
 }
 
+const ordenar = async (req, res) => {
+    try {
+        // Cambio a query para obtener el campo por el cual ordenar y la dirección
+        const campoOrden = req.params.ordenarPor;
+        let direccionOrden = 1; // Por defecto, orden ascendente
+
+        // Verificar si se proporcionó una dirección de orden en la URL
+        if (req.query.direccion && req.query.direccion === "-1") {
+            direccionOrden = -1; // Orden descendente
+        }
+
+        let consulta = modeloCancion.find({}).populate('solicitante', 'nombre email');
+
+        // Aplicar la ordenación si el campo es válido
+        if (campoOrden === "autor" || campoOrden === "titulo" || campoOrden === "fecha_solicitud") {
+            let sortObject = {};
+            sortObject[campoOrden] = direccionOrden;
+            consulta = consulta.sort(sortObject);
+        }
+
+        console.log("Ejecutando ordenar canciones", campoOrden, direccionOrden);
+
+        consulta.then(cancionesBBDD => {
+            return res.status(200).send({
+                status: "ok",
+                número_artículos: cancionesBBDD.length,
+                cancionesBBDD
+            });
+        }).catch(err => {
+            return res.status(404).json({
+                status: "error",
+                mensaje: "No se han encontrado canciones"
+            });
+        });
+    } catch (error) {
+        console.error("Error en el método ordenar:", error);
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error interno del servidor"
+        });
+    }
+};
+
+
 
 module.exports = {
     crear,
     listar,
     uno,
     borrar,
-    editar
+    editar,
+    ordenar
 }

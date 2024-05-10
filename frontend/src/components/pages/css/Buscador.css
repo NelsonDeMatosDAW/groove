@@ -1,0 +1,33 @@
+.fondoContainerFormBuscador{
+    background-image: url('/img/buscador.jpeg');
+    background-size: cover; /* Para que la imagen se ajuste al contenedor */
+    background-repeat: no-repeat; /* Para evitar que la imagen se repita */
+    background-position: center; /* Para centrar la imagen */
+    padding-top: 150px;
+    padding-bottom: 150px;
+}
+
+.nombreUsuario{
+    color: #BA9323;
+    font-size: xx-large;
+}
+
+@media (max-width: 700px) {
+    .form-container{
+        max-width: 200px !important;
+    }
+    form{
+        max-width: 180px;
+    }
+    .fondoContainerFormBuscador{
+        background-image: url('/img/buscador.jpeg');
+        background-size: cover; /* Para que la imagen se ajuste al contenedor */
+        background-repeat: no-repeat; /* Para evitar que la imagen se repita */
+        background-position: center; /* Para centrar la imagen */
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    input::placeholder{
+        font-size: 0.7em;
+    }
+}

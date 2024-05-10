@@ -5,6 +5,9 @@ const modeloUsuario = require("../modelos/Usuario");
 const bcryptjs = require('bcryptjs');
 const jsonwebtoken = require('jsonwebtoken');
 
+//Importamos el helper para encriptar contraseña
+const encriptar = require("../helpers/Encriptar");
+
 //Importamos express para poder utilizar res.cookie
 const express = require('express');
 const dotenv = require('dotenv');
@@ -18,24 +21,19 @@ const login= async (req, res) => {
  
     //Recoger id por url
     let id = req.params.id; //Recoger parametro llega por url
-    let nombreLogin = req.body?.nombre; //Recoger parámetro llega por req como json
+    let emailLogin = req.body?.email; //Recoger parámetro llega por req como json
     let contraLogin = req.body?.contra;
 
-    /*
-    console.log("nombre "+nombreLogin)
-    console.log("contra "+contraLogin)
-    */
-
     //Comprobamos que los datos esten rellenos
-    if (!nombreLogin || !contraLogin) {
+    if (!emailLogin || !contraLogin) {
         return res.status(400).json({
             status: "error",
-            memsaje: "Datos incompletos (rellena los datos)"
+            mensaje: "Datos incompletos (rellena los datos)"
         })
     }
 
     try {
-        const usuarioEncontrado = await modeloUsuario.findOne({ nombre: nombreLogin });
+        const usuarioEncontrado = await modeloUsuario.findOne({ email: emailLogin });
 
         if (!usuarioEncontrado) {
             return res.status(400).json({
@@ -44,6 +42,7 @@ const login= async (req, res) => {
             });
         }
 
+        //Comparamos la contraseña del formulario con la encriptada
         const loginCorrecto = await bcryptjs.compare(contraLogin, usuarioEncontrado.contra);
 
         if (!loginCorrecto) {
@@ -55,23 +54,20 @@ const login= async (req, res) => {
 
         //Creamos el token
         const token = jsonwebtoken.sign(
-            {nombre: usuarioEncontrado.nombre},
+            {
+                id: usuarioEncontrado._id,
+                email: usuarioEncontrado.email,
+                rol:usuarioEncontrado.rol,
+                nombre: usuarioEncontrado.nombre
+            },
             process.env.JWT_SECRET,
             {expiresIn:process.env.JWT_EXPIRATION}
         );
 
-        console.log(token);
-
-        const cookieOption = {
-            expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 *1000) ,
-            path: "/"
-        }
-
-        res.cookie("jwt",token,cookieOption);
-
         return res.status(200).json({
             status: "ok",
-            mensaje: "Inicio de sesión exitoso"
+            mensaje: "Inicio de sesión exitoso",
+            token: token
         });
     } catch (error) {
         return res.status(500).json({
@@ -84,16 +80,19 @@ const login= async (req, res) => {
 
 const registro = async (req, res) => {
 
+    console.log("Ejecutando endPoint registro de usuarios")
+
     //Obtemos los datos de registro
     const nombreRegistro= req.body?.nombre;
     const rolRegistro = req.body?.rol;
+    const emailRegistro = req.body?.email;
     const contraRegistro = req.body?.contra;
 
-    console.log("Datos "+nombreRegistro+" "+rolRegistro+" "+contraRegistro)
+    console.log("Datos "+nombreRegistro+" "+rolRegistro+" "+contraRegistro+" y "+emailRegistro);
 
     try {
         //Comprobamos que se envian los datos
-        if (!nombreRegistro || !contraRegistro || !rolRegistro) {
+        if (!nombreRegistro || !contraRegistro || !rolRegistro || !emailRegistro) {
             return res.status(400).json({
                 status: "error",
                 memsaje: "Datos incompletos (rellena los datos)"
@@ -101,20 +100,20 @@ const registro = async (req, res) => {
         }
 
         //Comprobamos que no exista un usuario con el mismo nombre
-        const usuarioEncontrado = await modeloUsuario.findOne({ nombre: nombreRegistro });
+        const usuarioEncontrado = await modeloUsuario.findOne({ email: emailRegistro });
         if (usuarioEncontrado) {
-            return res.status(200).json({
-                status: "ok",
-                mensaje: "Ya existe un usuario con ese nombre"
+            return res.status(400).json({
+                status: "error",
+                mensaje: "Ya existe un usuario con ese email"
             })
         }
 
         //Encriptamos su contraseña
-        const salt = await bcryptjs.genSalt(5);
-        const hashPassword = await bcryptjs.hash(contraRegistro, salt);
+        const hashPassword = await encriptar(contraRegistro);
         //Creamos nuevo usuario urilizando el modelo de mongoose
         const nuevoUsuario = new modeloUsuario({
             nombre: nombreRegistro ,
+            email: emailRegistro,
             rol: rolRegistro,
             contra: hashPassword
         })
@@ -144,10 +143,6 @@ const registro = async (req, res) => {
         console.log("Error en el servidor al intentar crear un usuario "+error)
     }
 
-    return res.status(200).json({
-        status: "ok",
-        mensaje: "hola mundo"
-    })
 }
 
 const listar = async (req, res) => {
@@ -155,7 +150,7 @@ const listar = async (req, res) => {
     * guardamos en consulta el resultado de la consulta a la BBDD para así
     * poder utilizar esta consulta con diferentes métodos, como ordenar, filtrar cierto número de artículos etc
     */
-    let consulta = modeloUsuario.find({});
+    let consulta = modeloUsuario.find({}).select('-contra');
         console.log("Se está ejecutando el método listar usuarios");
 
         if(req.params.ultimos){
@@ -178,8 +173,111 @@ const listar = async (req, res) => {
 
 }
 
+const editar = async (req, res) => {
+    console.log("Ejecutando método para editar usuario (contraseña)");
+
+    //Recoger nuevaContra 
+    let nuevaContra = req.body?.nuevaContra; //Recoger parametro llega por body
+
+    if (!nuevaContra) {
+        return res.status(400).json({
+            status: "error",
+            mensaje: "El campo contraseña debe tener contenido"
+        })
+    }
+
+    try {
+        let usuarioId = req.body?.usuarioId;
+        //Antes de actualizalo utilizar método de cifrado de contraseña
+        let contraEncriptada = await encriptar(nuevaContra);
+
+        // Buscar y actualizar usuario
+        const usuarioActualizado = await modeloUsuario.findOneAndUpdate(
+            {_id: usuarioId}, 
+            {$set: {contra: contraEncriptada}}, 
+            { new: true }
+        );
+
+        if (!usuarioActualizado) {
+            return res.status(500).json({
+                status: "error",
+                mensaje: "Error al cambiar la contraseña del usuario"
+            });
+        }
+
+        // Devolver respuesta
+        return res.status(200).json({
+            status: "ok",
+            mensaje: "Contraseña cambiada correctamente",
+            usuario: usuarioActualizado
+        });
+        
+    } catch (error) {
+        console.log("Error servidor al intentar cambiar contraseña: "+error);
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error en el servidor al intentar cambiar la contraseña"
+        });
+    }
+
+}
+
+const borrar = async (req, res) => {
+    console.log("Ejecutando método para eliminar usuario");
+
+    //Adquirimos el usuario a eliminar que llega por la url
+    let usuarioId = req.params.id;
+
+    try {
+        //comprobamos que el usuario exista
+        const usuarioExiste = await modeloUsuario.findOne({_id: usuarioId});
+
+        if(!usuarioExiste){
+            return res.status(400).json({
+                status: "error",
+                mensaje: "Usando no existe. Recarga la página"
+            })
+        }
+
+        //Realizamos borrado del usuario
+        const usuarioBorrado = await modeloUsuario.findOneAndDelete({_id: usuarioId});
+
+        if(!usuarioBorrado){
+            return res.status(500).json({
+                status: "error",
+                mensaje: "El usuario no ha podido eliminarse."
+            })
+        }
+
+        return res.status(200).json({
+            status: "ok",
+            mensaje: "Usuario eliminado correctamente"
+        })
+    } catch (error) {
+        console.log("Error al intentar eliminar usuario: "+error);
+        return res.status(500).json({
+            status: "error",
+            mensaje: "Error interno del servidor. El usuario no ha podido eliminarse."
+        })
+    }
+}
+
+const prueba = async (req, res) => {
+
+    console.log("Se está ejecutando el método prueba usuarios");
+
+    return res.status(200).send({
+        status: "ok",
+        mensaje: "El método prueba funciona correctamente"
+    })
+
+}
+
 module.exports = {
     login,
     registro,
-    listar
+    listar,
+    editar,
+    borrar,
+    prueba
 }

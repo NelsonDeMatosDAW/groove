@@ -1,3 +1,4 @@
+require('dotenv').config(); //Configuramos dontenv para que se busque .env
 const express = require("express");
 const {conexion} = require("./baseDatos/conexion");
 
@@ -6,13 +7,24 @@ conexion();
 
 //Configuramos servidor
 const app = express();
-const puerto = 3900;
+const puerto = process.env.PORT; //Adquirimos el puerto del archivo .env
 
 //Requerimos cors
 const cors = require("cors");
 
-app.use(cors());
+// Configuración del middleware de CORS
+const corsOptions = {
+    origin: ['https://groovecall.es', 'https://www.groovecall.es'], // Reemplaza con la URL de tu cliente  http://localhost:5173
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Permitir credenciales
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Habilita preflight para todas las rutas si es necesario
+
 app.use(express.json());
+
 
 //Importamos rutas
 const rutasUsuario = require("./rutas/Usuario");

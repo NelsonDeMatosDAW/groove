@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.html [QSA,L]
+</IfModule>
+
+Options -MultiViews
+
+# Configuración de control de acceso actualizada para Apache 2.4
+<RequireAll>
+    Require all granted
+</RequireAll>
+
+<FilesMatch "^\.">
+    # Denegar el acceso a todos los archivos que comienzan con un punto
+    Require all denied
+</FilesMatch>

@@ -1,0 +1,75 @@
+.admin-container {
+    margin: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.usuarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 2vh;
+    margin: 0;
+}
+
+.usuarios-table button{
+    font-size: 1.5vh;
+}
+
+.usuarios-table th, .usuarios-table td {
+    border: 1px solid #818181;
+    padding: 8px;
+    text-align: left;
+}
+
+.usuarios-table th {
+    background-color: #b99730;
+}
+
+.th-botones{
+    display: flex;
+    justify-content: center;
+}
+
+.td-botones{
+    display: flex;
+    justify-content: space-around;
+}
+
+.button_borrarUsuario{
+    background: rgba(96, 1, 1, 0.674);
+}
+
+.inputTable{
+    border: 2px solid black;
+}
+
+@media screen and (max-width: 600px) {
+    .canciones-table {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 920px){
+    .botonTabla{
+        background: none;
+        color: black;
+        padding: 0;
+        margin: 1vh;
+    }
+    .inputTable{
+        width: 2vh;
+        border: 2px solid black;
+        font-size: 0.8vh;
+    }
+    .usuarios-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1vh;
+        margin: 0;
+    }
+    .usuarios-table button{
+        font-size: 0.9vh;
+    }
+}

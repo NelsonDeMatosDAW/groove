@@ -1,0 +1,234 @@
+/*---------------------------Página Inicio---------------------------*/
+.titulo_fondo{
+    background-image: url('/img/presentacion.jpeg'); /* Ruta a la imagen de fondo */
+    background-size: cover; /* Asegura que la imagen cubra completamente el contenedor */
+    background-position: center; /* Centra la imagen en el contenedor */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    height: 100vh; /* Establece la altura del contenedor al 100% de la altura de la ventana del navegador */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #FFF; /* Establece el color de texto, ajusta según necesites */
+}
+
+.titulo_fondo .titulo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.titulo_fondo .titulo h1{
+    font-size: 3rem;
+}
+
+.titulo_fondo .titulo h2{
+    font-size: 1rem;
+}
+
+.dj_fondo{   
+    animation: colorChange 4s infinite, shadowChange 4s infinite; /* Nombre, duración, repeticiones */
+}
+
+@keyframes colorChange {
+    15%   { background-color: #ffffff6f; }
+    30%  { background-color: #0734c9a4; }
+    45%  { background-color: #3c07b7; }
+    60%  { background-color: #8305c7; }
+    75% { background-color: #cf24f6; }
+    90% { background-color: #f317b1; }
+    100% { background-color: #ed8fd19b; }
+}
+
+@keyframes shadowChange {
+    15%   { box-shadow: 0 0 40px #ffffff6f; }
+    30%  { box-shadow: 0 0 40px #0734c9a4; }
+    45%  { box-shadow: 0 0 40px #3c07b7; }
+    60%  { box-shadow: 0 0 40px #8305c7; }
+    75% { box-shadow: 0 0 40px #cf24f6; }
+    90% { box-shadow: 0 0 40px #f317b1; }
+    100% { box-shadow: 0 0 40px #ed8fd19b; }
+}
+
+.divPresentacion{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.tarjetaFoto{
+    display: flex;
+    justify-content: center;
+}
+
+.tarjetaFoto img{
+    width: 90%;
+    border-radius: 15px;
+}
+
+.tarjetaPresentacion{
+    width: 90%;
+    border-radius: 15px;
+    margin-left: 2vh;
+    margin-right: 2vh;
+    text-align: justify;
+}
+
+.divTituloInicio{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1vh;
+}
+
+.divTituloInicio h1{
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.divTituloInicio h3{
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.divTituloInicio b{
+    color: #ffffff;
+    animation: colorChangeB 4s infinite; /* Nombre, duración, repeticiones */
+}
+
+@keyframes colorChangeB {
+    15%   { color: #2f2c2c; }
+    30%  { color: #0734c9a4; }
+    45%  { color: #3c07b7; }
+    60%  { color: #8305c7; }
+    75% { color: #cf24f6; }
+    90% { color: #f317b1; }
+    100% { color: #ed8fd19b; }
+}
+
+.divPresentacionBeneficios{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Asegura que los hijos del flex se estiren para ocupar el mismo alto */
+    height: 100vh;   
+}
+
+.divPresentacionBeneficios .tarjetaFoto{
+    height: 50vh;
+    overflow: hidden; /* Oculta cualquier parte de la imagen que exceda del contenedor */
+}
+
+.divPresentacionBeneficios .tarjetaFoto img{
+    width: 100%;
+    height: auto;
+    border-radius: 0px !important;
+}
+
+@supports(object-fit: cover){
+    .tarjetaFoto img{
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+}
+
+.divTextoBeneficios{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
+    width: 100%;
+}
+
+.divTextoBeneficios h2{
+    font-size: xx-large;
+    text-align: center;
+}
+
+.divTextoBeneficios ul{
+    justify-content: center;
+}
+
+.divTextoBeneficios li{
+
+    font-size: 1rem;
+    list-style-type: none;
+    margin-top: 2vh;
+    padding: 1vh;
+    margin-right: 3vh;
+}
+
+/* Pantallas medianas (tablets) */
+@media (min-width: 1000px) {
+    p{
+        font-size: 1.2rem;
+        text-align: justify;
+    }
+
+    li{
+        font-size: 1.2rem !important;
+        text-align: justify;
+    }
+
+    .titulo_fondo .titulo h1{
+      font-size: 4rem;
+    }
+
+    .divPresentacion{
+        display: flex;
+        flex-direction:row;
+    }
+
+    .divPresentacion img{
+        width: 600px;
+    }
+
+}
+
+/* Pantallas grandes (desktops) */
+@media (min-width: 1300px) {
+    p{
+        font-size: 1.4rem;
+        text-align: justify;
+    }
+
+    li{
+        font-size: 1.4rem !important;
+        text-align: justify;
+    }
+
+    .titulo_fondo .titulo h1{
+        font-size: 6rem;
+      }
+  
+    .divPresentacion{
+          display: flex;
+          flex-direction:row;
+    }
+
+    .divPresentacion img{
+        width: 800px;
+    }
+
+    .divPresentacionBeneficios .tarjetaFoto{
+        height: 50vh;
+        overflow: hidden; /* Oculta cualquier parte de la imagen que exceda del contenedor */
+    }
+
+    @supports(object-fit: cover){
+        .tarjetaFoto img{
+          height: 100%;
+          object-fit: cover;
+          object-position: center center;
+        }
+    }
+}

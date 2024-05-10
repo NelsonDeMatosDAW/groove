@@ -1,0 +1,364 @@
+html{
+  background: #ffffff;
+
+}
+
+#root{
+  min-width: 100%;
+}
+
+body{
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  min-height: 100svh;
+  font-size: large;
+}
+
+.form-container{
+  margin: 0 auto;
+  max-width: 500px;
+  background: whitesmoke;
+  border-radius: 10px;
+  padding: 50px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  box-shadow: -4px 8px 10px rgba(0, 0, 0, 0.1);
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+}
+
+form+p, form p{
+  text-align: center;
+}
+
+input, button{
+  border-radius: 4px;
+  border: unset;
+  padding: 15px 30px;
+  font-size: large;
+}
+
+button{
+  background:rgb(70, 70, 70);
+  color: aliceblue;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.error{
+  color: rgb(182, 28, 28);
+}
+
+#correcto{
+  color: rgb(14, 131, 14);
+}
+
+.escondido{
+  display: none;
+}
+
+.sr-only{
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: -1px;
+  overflow: hidden;
+}
+
+/*---------------- HEADER----------------------*/
+
+.header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  border-bottom: 2px solid black;
+  min-width: 100%;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.menu-button {
+  display: none; /* Oculta el botón por defecto */
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.menu-open li{
+  padding-top: 0.6em;
+}
+
+.open{
+  padding-bottom: 0.6em;
+  
+  background: #fafafa;
+}
+
+.header .logo{
+  flex-grow: 2;
+  display: flex;
+}
+
+.header .logo h1{
+  margin-left: 10px;
+  font-weight: 800;
+}
+
+.header .logo b{
+  color: #BA9323;
+  font-weight: 700;
+}
+
+.header nav{
+  flex-grow: 1;
+}
+
+.header nav ul{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.header li{
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.header li a{
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  transition: all 300ms;
+}
+
+.header a:hover{
+  color: #BA9323;
+
+}
+
+.header .active{
+  color: #BA9323;
+}
+
+.dark-mode {
+  /*Al pulsar el boton cambiar modo para el fondo, textos, a etc*/
+  background-color: rgb(6, 6, 6);
+  color: white;
+
+  .header nav a{
+    color: white;
+  }
+  .header .active{
+    color: #BA9323;
+  }
+  /*Al pulsar el boton cambiar modo para el footer*/
+  .tarjeta{
+    background: #ffffff;
+  }
+  .tarjeta h4, .tarjeta a{
+    color: #000000;
+  }
+  .tarjeta .iconosTarjeta{
+    color: #000000;
+  }
+  .iconoRed{
+    color: rgb(0, 0, 0);
+  }
+  .form-blanco p, .form-blanco h1{
+    color: #000000;
+  }
+  .footer a{
+    color: whitesmoke;
+    text-decoration: none;
+  }
+  .iconosSociales div{
+    background: #BA9323;
+  }
+}
+
+.iconoLogo{
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.divCerrarDark{
+  display: flex;
+  flex-direction: row;
+
+}
+.iconoCerrar{
+  margin-right: 10px;
+}
+
+/*---------------- HEADER Mobile ----------------------*/
+@media (max-width: 700px) {
+  nav ul {
+    display: none; /* Oculta la lista de navegación por defecto */
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 45%;
+    background: transparent;
+    width: 100%;
+    transform: translateX(-50%); /* Ajusta la posición para centrar */
+  }
+
+  .open li {
+    display: flex; /* Muestra la lista cuando el menú está abierto */
+  }
+
+  .close li{
+    display: none; /* Oculta la lista de navegación cuando el estado menuOpen es false */
+  }
+
+  .menu-button {
+    display: block; /* Muestra el botón en pantallas más pequeñas */
+  }
+
+  .menu-open{
+    padding-bottom: 15%;
+  }
+
+  .open{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+
+/*---------------------------FOOTER---------------------------*/
+/* Footer */
+.fondoFooter{
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.tarjetasContacto{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px;
+  
+}
+
+.tarjeta{
+  width: 20%;
+  min-height: 200px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 5px solid #BA9323;
+  border-radius: 10px;
+  padding: 20px;
+  background: rgb(0, 0, 0);
+}
+
+.tarjeta a{
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.tarjeta a:hover{
+  color:#BA9323;
+}
+
+.tarjeta p{
+  font-weight: 700;
+  margin: 0;
+}
+
+.tarjeta h4{
+  color: whitesmoke;
+}
+
+.tarjeta .iconosTarjeta{
+  font-size: 30px;
+}
+
+.iconoTarjetaEnlace{
+  font-size: 20px;
+}
+
+hr{
+  border: 1px solid black;
+  width: 100%;
+}
+
+.iconosSociales{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.iconosSociales div{
+  margin-right: 15px;
+
+  padding: 15px;
+  border-radius: 50px;
+  background: #000000;
+}
+
+.iconosSociales div a{
+  color: #000000;
+}
+
+.iconoRed{
+  font-size: 2rem;
+  color: #BA9323;
+}
+
+.footer{
+  display: flex;
+  justify-content:space-around;
+  text-align: center;
+  font-size: 14px;
+  padding-bottom: 35px;
+  padding-top: 30px;
+
+  color: #888888;
+}
+
+.footer a{
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.footer a:hover{
+  color:#BA9323;
+}
+
+/*---------------------------FOOTER Mobile---------------------------*/
+
+@media (max-width: 700px) {
+  .tarjetasContacto{
+      display: flex;
+      flex-direction: column;
+  }
+  .tarjeta{
+      width: 80%;
+      margin-bottom: 5%;
+  }
+
+}
